@@ -7,7 +7,7 @@ import java.util.Set;
 @Table(name = "app_user")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     private String username;
@@ -19,6 +19,14 @@ public class User {
 
     @ManyToMany
     private Set<Role> roles;
+
+    public User(String name, String s) {
+        this.username = name;
+        this.password=s;
+    }
+
+    public User() {
+    }
 
     public Long getId() {
         return id;

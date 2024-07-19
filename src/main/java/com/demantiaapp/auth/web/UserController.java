@@ -1,14 +1,22 @@
 package com.demantiaapp.auth.web;
 
+import com.demantiaapp.auth.model.Notifications;
 import com.demantiaapp.auth.model.User;
+import com.demantiaapp.auth.repository.NotificationsRepository;
+import com.demantiaapp.auth.repository.UserRepository;
+import com.demantiaapp.auth.service.NotificationsService;
 import com.demantiaapp.auth.service.SecurityService;
 import com.demantiaapp.auth.service.UserService;
 import com.demantiaapp.auth.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 public class UserController {
@@ -20,6 +28,15 @@ public class UserController {
 
     @Autowired
     private UserValidator userValidator;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private NotificationsRepository notificationsRepository;
+
+    @Autowired
+    private NotificationsService notificationsService;
 
     @GetMapping("/registration")
     public String registration(Model model) {
@@ -54,8 +71,19 @@ public class UserController {
         return "login";
     }
 
-    @GetMapping({"/", "/welcome"})
+    @GetMapping({"/welcome"})
     public String welcome(Model model) {
         return "welcome";
+    }
+
+    @GetMapping("/getNotifications")
+    public ResponseEntity<List<Notifications>> getNotifications() {
+        return ResponseEntity.ok((List<Notifications>) notificationsService.fin());
+    }
+
+    @PostMapping("/putNotifications")
+    public ResponseEntity<Notifications> putNotifications(@RequestBody Notifications notifications) {
+        Notifications addedNotifications = notificationsService.addNotifications(notifications);
+        return new ResponseEntity<>(addedNotifications, HttpStatus.CREATED);
     }
 }

@@ -7,19 +7,19 @@ import java.util.Set;
 @Table(name = "app_role")
 public class Role {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private int id;
 
     private String name;
 
     @ManyToMany(mappedBy = "roles")
     private Set<User> users;
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
