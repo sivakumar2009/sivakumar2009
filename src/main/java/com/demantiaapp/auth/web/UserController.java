@@ -16,6 +16,11 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -78,7 +83,12 @@ public class UserController {
 
     @GetMapping("/getNotifications")
     public ResponseEntity<List<Notifications>> getNotifications() {
-        return ResponseEntity.ok((List<Notifications>) notificationsService.fin());
+        Timestamp original = new Timestamp(new Date().getTime());
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(original.getTime());
+        cal.add(Calendar.SECOND, 5);
+        Timestamp later = new Timestamp(cal.getTime().getTime());
+        return ResponseEntity.ok((List<Notifications>) notificationsRepository.findByTimestampIsBetween(original, later));
     }
 
     @PostMapping("/putNotifications")
